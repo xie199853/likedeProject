@@ -7,24 +7,21 @@
         </h3>
       </div>
       <el-form-item prop="mobile">
-        <span class="svg-container el-icon-user-solid" />
+        <span class="svg-container el-icon-mobile-phone" />
         <el-input v-model="loginForm.mobile" placeholder="请输入手机号码" />
       </el-form-item>
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
+        <span class="svg-container el-icon-lock" />
         <el-input ref="pwd" v-model="loginForm.password" :type="passwordType" placeholder="请输入密码" />
         <span class="svg-container" @click="showpwd">
           <svg-icon :icon-class="passwordType == 'password'?'eye':'eye-open'" />
         </span>
       </el-form-item>
-
+      <el-form-item>
+        <span class="svg-container el-icon-mobile-phone" />
+        <el-input placeholder="请输入验证码" />
+      </el-form-item>
       <el-button class="loginBtn" :loading="loading" @click="login">登录</el-button>
-      <div class="tips">
-        <span style="margin-right:20px;">账号: 13800000002</span>
-        <span> 密码: 123456</span>
-      </div>
 
     </el-form>
   </div>
@@ -49,8 +46,13 @@ export default {
     }
     return {
       loginForm: {
+        loginName: 'admin',
         mobile: '13800000002',
-        password: '123456'
+        password: '123456',
+        code: '',
+        clientToken: this.$store.state.token,
+        loginType: 0,
+        account: '13800000002'
       },
       rules: {
         mobile: [
@@ -91,7 +93,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
-$light_gray:#68b0fe;
+$light_gray:#999;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -108,7 +110,6 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-
     input {
       background: transparent;
       border: 0px;
@@ -127,24 +128,28 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid #ccc;
     // background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
     background: rgba(255, 255, 255, 0.7); // 输入登录表单的背景色
   }
   .el-form-item__error {
-    color: #fff
+    color: #f56c6c
+  }
+  .el-form-item__content{
+    font-size: 17px;
+    padding-right:5px;
   }
   .loginBtn {
-    background: #407ffe;
-    height: 64px;
-    line-height: 32px;
-    font-size: 24px;
+    background: #6377ec;
+    height: 52px;
+    line-height: 26px;
+    font-size: 14px;
     width: 100%;
     border: none;
     color: #fff;
-    margin-bottom: 30px;
+    margin-top: 7px;
   }
 
 }
@@ -159,27 +164,17 @@ $light_gray:#68b0fe;
   min-height: 100%;
   width: 100%;
   background-color: $bg;
-  overflow: hidden;
-
   .login-form {
-    position: relative;
-    width: 520px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 518px;
     max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
+    height: 388px;
+    padding: 25px 35px 0;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 3%;
   }
 
   .svg-container {
@@ -199,6 +194,14 @@ $light_gray:#68b0fe;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
+      img {
+        position: absolute;
+    width: 96px;
+    height: 96px;
+    top: -117px;
+    left: 50%;
+    margin-left: -48px;
+      }
     }
   }
 
