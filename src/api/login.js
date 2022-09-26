@@ -16,8 +16,9 @@ export function loginAPI(data) {
  * 获取验证码接口
  * @returns
  */
-export function VerificationCodeAPI(clientToken) {
+export const VerificationCodeAPI = (num) => {
   return request({
-    url: `/user-service/user/imageCode/${clientToken}`
+    url: `/user-service/user/imageCode/${num}`,
+    responseType: 'blob'
   })
 }

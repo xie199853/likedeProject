@@ -7,6 +7,7 @@
         </h3>
       </div>
       <el-form-item prop="mobile">
+        <!--/* eslint-disable-next-line */-->
         <span class="svg-container el-icon-mobile-phone" />
         <el-input v-model="loginForm.mobile" placeholder="请输入手机号码" />
       </el-form-item>
@@ -18,8 +19,9 @@
         </span>
       </el-form-item>
       <el-form-item>
-        <span class="svg-container el-icon-mobile-phone" />
-        <el-input placeholder="请输入验证码" />
+        <span class="svg-container iconfont icon-anquanzhongxin89" />
+        <el-input v-model="loginForm.code" class="yzm" placeholder="请输入验证码" />
+        <img class="yanzhengma" :src="imgData" alt="" @click="getCode()">
       </el-form-item>
       <el-button class="loginBtn" :loading="loading" @click="login">登录</el-button>
 
@@ -33,40 +35,35 @@
    -->
 </template>
 <script>
-import { validPhone } from '@/utils/validate'
+import { VerificationCodeAPI } from '@/api/login'
 export default {
   name: 'Login',
   data() {
-    const phoneValid = (rules, value, callback) => {
-      if (!validPhone(value)) {
-        callback(new Error('格式错误'))
-      } else {
-        callback()
-      }
-    }
     return {
+      imgData: '',
       loginForm: {
-        loginName: 'admin',
-        mobile: '13800000002',
-        password: '123456',
+        mobile: 'admin',
+        password: 'admin',
         code: '',
-        clientToken: this.$store.state.token,
-        loginType: 0,
-        account: '13800000002'
+        clientToken: '',
+        loginType: 0
       },
       rules: {
         mobile: [
-          { required: true, message: '输入手机号码', trigger: 'blur' },
-          { validator: phoneValid, trigger: 'blur' }
+          { required: true, message: '输入手机号码', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '输入密码', trigger: 'blur' },
-          {	min: 6, max: 16, message: '密码格式错误 ', trigger: 'blur' }
+          {	min: 3, max: 16, message: '密码格式错误 ', trigger: 'blur' }
         ]
       },
       passwordType: 'password',
       loading: false
     }
+  },
+  created() {
+    this.getCode()
+    this.loginForm.clientToken = Math.floor(Math.random() * 100)
   },
   methods: {
     showpwd() {
@@ -82,6 +79,17 @@ export default {
         await this.$store.dispatch('user/loginAction', this.loginForm)
       } finally {
         this.loading = false
+      }
+    },
+    async getCode() {
+      try {
+        const { data } = await VerificationCodeAPI(this.loginForm.clientToken)
+        console.log(data)
+        const blob = new Blob([data], { type: 'image/png' })
+        const url = window.URL.createObjectURL(blob)
+        this.imgData = url
+      } catch (error) {
+        console.log(error)
       }
     }
   }
@@ -138,6 +146,7 @@ $cursor: #fff;
     color: #f56c6c
   }
   .el-form-item__content{
+    // height: 47px;
     font-size: 17px;
     padding-right:5px;
   }
@@ -214,5 +223,15 @@ $light_gray:#68b0fe;
     cursor: pointer;
     user-select: none;
   }
+}
+.yzm {
+width: 268px;
+}
+.yanzhengma {
+width: 130px;
+height: 53px;
+position: absolute;
+    top: 0;
+    right: 0;
 }
 </style>
